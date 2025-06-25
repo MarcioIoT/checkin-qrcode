@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Check-in QR Igreja</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+  <h2>Leitor de QR Code - Check-in Igreja</h2>
+  <div id="reader" style="width:300px;"></div>
+  <div id="result"></div>
+
+  <script>
+    const urlScript = 'https://script.google.com/macros/s/AKfycbxG7nIPkc6dwxoHQdPvCDRSeiuNYV5NnwOZsz3htgUU8xvr0U19fkZZCbmUaAQdCMtU/exec'; // Cole o URL aqui
+
+    function postCheckin(data) {
+      fetch(urlScript, {
+        method: 'POST',
+        body: JSON.stringify(data)
+      }).then(res => res.text())
+        .then(resp => {
+          document.getElementById('result').innerText = 'Check-in registrado com sucesso!';
+        }).catch(err => {
+          document.getElementById('result').innerText = 'Erro ao registrar. Tente novamente.';
+        });
+    }
+
+    function onScanSuccess(decodedText, decodedResult) {
+      try {
+        const data = JSON.parse(decodedText);
+        postCheckin(data);
+      } catch (e) {
+        document.getElementById('result').innerText = 'QR Code inválido.';
+      }
+    }
+
+    var html5QrcodeScanner = new Html5QrcodeScanner(
+      "reader", { fps: 10, qrbox: 250 });
+    html5QrcodeScanner.render(onScanSuccess);
+  </script>
+</body>
+</html>
