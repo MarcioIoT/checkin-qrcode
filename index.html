@@ -10,7 +10,7 @@
   <div id="result"></div>
 
   <script>
-    const urlScript = 'https://script.google.com/macros/s/AKfycbxG7nIPkc6dwxoHQdPvCDRSeiuNYV5NnwOZsz3htgUU8xvr0U19fkZZCbmUaAQdCMtU/exec'; // Cole o URL aqui
+    const urlScript = 'https://checkin-qrcode.onrender.com/checkin'; // Cole o URL aqui
 
     function postCheckin(data) {
       fetch(urlScript, {
@@ -24,14 +24,17 @@
         });
     }
 
-    function onScanSuccess(decodedText, decodedResult) {
-      try {
-        const data = JSON.parse(decodedText);
-        postCheckin(data);
-      } catch (e) {
-        document.getElementById('result').innerText = 'QR Code inválido.';
-      }
-    }
+   function onScanSuccess(decodedText, decodedResult) {
+  console.log("QR lido:", decodedText);
+  try {
+    const data = JSON.parse(decodedText);
+    postCheckin(data);
+  } catch (e) {
+    console.error("Erro ao interpretar JSON:", e);
+    document.getElementById('result').innerText = 'QR Code inválido.';
+  }
+}
+
 
     var html5QrcodeScanner = new Html5QrcodeScanner(
       "reader", { fps: 10, qrbox: 250 });
